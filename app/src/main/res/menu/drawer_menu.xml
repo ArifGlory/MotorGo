@@ -5,10 +5,6 @@
             android:id="@+id/menu_list"
             android:icon="@drawable/drawer_motor"
             android:title="Motorku" />
-        <item
-            android:id="@+id/menu_profil"
-            android:icon="@drawable/user"
-            android:title="Profil" />
 
 
     </group>

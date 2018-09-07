@@ -196,7 +196,8 @@ public class RegisterActivity extends AppCompatActivity {
                     userDaftarModel = new User(userID,
                             fullName.getText().toString(),
                             token,
-                            time);
+                            time,
+                            "1");
 
                     ref = ref.child("users");
                     ref.child(userID).setValue(userDaftarModel);

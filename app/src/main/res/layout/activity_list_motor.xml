@@ -21,6 +21,18 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Pilih Salah satu motor untuk di kontrol"
+        android:textColor="#FFFF"
+        android:layout_marginLeft="10dp"
+        android:textStyle="bold"
+        android:layout_marginTop="15dp"
+        android:textSize="18sp"
+        android:layout_below="@+id/txtJudul"
+        android:id="@+id/txtInfo2"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="Anda Belum Menambahkan Data Motor"
         android:textColor="#FFFF"
         android:layout_centerInParent="true"
@@ -36,7 +48,7 @@
         android:layout_height="match_parent"
         android:clipToPadding="true"
         android:padding="10dp"
-        android:layout_below="@+id/txtJudul"
+        android:layout_below="@+id/txtInfo2"
         android:layout_marginTop="10dp"
         />
 

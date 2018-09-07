@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Kelas.SharedVariable;
+import hadi.motorhebat.BerandaActivity;
 import hadi.motorhebat.ListMotorActivity;
 import hadi.motorhebat.R;
 
@@ -126,11 +127,16 @@ public class RecycleAdapterListMotor extends RecyclerView.Adapter<RecycleViewHol
 
 
         holder.txtPlatNomor.setOnClickListener(clicklistener);
+        holder.cardlist_item.setOnClickListener(clicklistener);
+        holder.txtPlatNomor.setOnClickListener(clicklistener);
+        holder.relaList.setOnClickListener(clicklistener);
+        holder.img_iconlistMotor.setOnClickListener(clicklistener);
 
 
         holder.txtNamaMotor.setTag(holder);
         holder.txtPlatNomor.setTag(holder);
         holder.img_iconlistMotor.setTag(holder);
+        holder.relaList.setTag(holder);
 
 
     }
@@ -142,7 +148,13 @@ public class RecycleAdapterListMotor extends RecyclerView.Adapter<RecycleViewHol
 
             RecycleViewHolderListMotor vHolder = (RecycleViewHolderListMotor) v.getTag();
             int position = vHolder.getPosition();
-            Toast.makeText(context.getApplicationContext(), "Item diklik", Toast.LENGTH_SHORT).show();
+           // Toast.makeText(context.getApplicationContext(), "Item diklik", Toast.LENGTH_SHORT).show();
+
+           String activeDevice = list_deviceID.get(position).toString();
+            i = new Intent(v.getContext(), BerandaActivity.class);
+            i.putExtra("activeDevice",activeDevice);
+            context.startActivity(i);
+
 
         }
     };

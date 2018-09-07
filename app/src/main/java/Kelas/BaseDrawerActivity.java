@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 import com.google.firebase.FirebaseApp;
@@ -33,6 +34,7 @@ import hadi.motorhebat.ListMotorActivity;
 import hadi.motorhebat.MainActivity;
 import hadi.motorhebat.R;
 
+import hadi.motorhebat.SplashActivity;
 import util.CircleTransformation;
 
 /**
@@ -58,6 +60,8 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
     private FirebaseAuth.AuthStateListener fStateListener;
     private String displayname;
     FirebaseUser fbUser;
+    String check;
+    Intent i;
 
     @Override
     public void setContentView(int layoutResID) {
@@ -126,6 +130,14 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
 
         //jumlah motor
         txtHargaCoin.setText(String.valueOf(SharedVariable.list_motor.size()));
+        check = SharedVariable.check;
+        //Toast.makeText(getApplicationContext(),"Check : "+check,Toast.LENGTH_SHORT).show();
+
+        if (!check.equals("1")){
+            i = new Intent(getApplicationContext(), SplashActivity.class);
+            startActivity(i);
+        }
+
     }
 
     public void onGlobalMenuHeaderClick(final View v) {

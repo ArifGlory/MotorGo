@@ -31,13 +31,14 @@ public class SplashActivity extends AppCompatActivity {
     ProgressBar progressBar;
     Intent i;
     int delay =  3000;
-    DatabaseReference ref;
+    DatabaseReference ref,refDevice;
     private FirebaseAuth fAuth;
     private FirebaseAuth.AuthStateListener fStateListener;
     private static final long time = 3;
     private CountDownTimer mCountDownTimer;
     private long mTimeRemaining;
     private String now;
+    String activeDeviceKirim;
 
     DialogInterface.OnClickListener listener;
     @Override
@@ -47,6 +48,7 @@ public class SplashActivity extends AppCompatActivity {
         Firebase.setAndroidContext(this);
         FirebaseApp.initializeApp(SplashActivity.this);
         ref = FirebaseDatabase.getInstance().getReference();
+        refDevice = ref.child("device");
         fAuth = FirebaseAuth.getInstance();
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -72,7 +74,14 @@ public class SplashActivity extends AppCompatActivity {
 
                 @Override
                 public void onFinish() {
+                    if (!SharedVariable.list_motor.isEmpty()){
+                        activeDeviceKirim = SharedVariable.list_motor.get(0).toString();
+                    }else {
+                        activeDeviceKirim = "zero";
+                    }
+
                     i = new Intent(SplashActivity.this, BerandaActivity.class);
+                    i.putExtra("activeDevice",activeDeviceKirim);
                     startActivity(i);
                 }
             };
@@ -89,6 +98,19 @@ public class SplashActivity extends AppCompatActivity {
                         deviceId = child.child("deviceId").getValue().toString();
                         SharedVariable.list_motor.add(deviceId);
                     }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+            ref.child("users").child(fAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    String cek = (String) dataSnapshot.child("check").getValue();
+                    SharedVariable.check = cek;
                 }
 
                 @Override

@@ -9,12 +9,14 @@ public class User {
     public String displayName;
     public String token;
     public String last_login;
+    public String check;
 
-    public User(String uid, String displayName, String token, String last_login) {
+    public User(String uid, String displayName, String token, String last_login,String check) {
         this.uid = uid;
         this.displayName = displayName;
         this.token = token;
         this.last_login = last_login;
+        this.check = check;
     }
 
     public String getUid() {
