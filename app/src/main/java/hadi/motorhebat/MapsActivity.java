@@ -47,7 +47,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     Intent i;
     private Double lat,lon, userLon,userLat;
-    FloatingActionButton btnFind;
+    FloatingActionButton btnFind,btnRefresh;
 
     boolean isGPSEnabled = false;
     boolean isNetworkEnabled = false;
@@ -81,6 +81,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         btnFind = (FloatingActionButton) findViewById(R.id.btnFind);
+        btnRefresh = (FloatingActionButton) findViewById(R.id.btnRefresh);
 
         lat = SharedVariable.latitudeMotor;
         lon = SharedVariable.longitudeMotor;
@@ -103,7 +104,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
 
-        Location location = locationManager.getLastKnownLocation(provider);
+        final Location location = locationManager.getLastKnownLocation(provider);
         if (location != null) {
             System.out.println("Provider " + provider + " has been selected.");
             onLocationChanged(location);
@@ -121,6 +122,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     sendRequest();
                 }else {
                     Snackbar.make(view,"Lokasi bermasalah",Snackbar.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        btnRefresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (lat != null){
+
+                    if (SharedVariable.latitudeMotor != lat) {
+                        lat = SharedVariable.latitudeMotor;
+                        lon = SharedVariable.longitudeMotor;
+                        mMap.clear();
+
+                        LatLng myMotor = new LatLng(lat, lon);
+                        mMap.addMarker(new MarkerOptions().position(myMotor).title("Lokasi Motor"));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myMotor, 15));
+                    }
+                }else {
+                    Snackbar.make(view,"Lokasi motor bermasalah",Snackbar.LENGTH_SHORT).show();
                 }
             }
         });
@@ -161,6 +183,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
         mMap.setMyLocationEnabled(true);
+
     }
 
     public Location getLocation() {

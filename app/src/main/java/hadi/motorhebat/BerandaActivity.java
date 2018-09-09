@@ -147,34 +147,38 @@ public class BerandaActivity extends BaseDrawerActivity implements LocationListe
                     String ping  = dataSnapshot.child("ping").getValue().toString();
                     String mesin  = dataSnapshot.child("mesin").getValue().toString();
                     String secure = dataSnapshot.child("secureMode").getValue().toString();
-                    Double latitude = (Double) dataSnapshot.child("lat").getValue();
-                    Double longitude = (Double) dataSnapshot.child("lon").getValue();
-
+                    String latlon = dataSnapshot.child("latlon").getValue().toString();
+                    String sublon = latlon.substring(latlon.indexOf(",")+1);
+                    int index = latlon.indexOf(",");
+                    String sublat = latlon.substring(0,index);
+                    //Toast.makeText(getApplicationContext(),"substing lat : "+sublat+" | substing lon : "+sublon, Toast.LENGTH_SHORT).show();
 
                     txtPlatNomor.setText(platNomor);
                     txtNamaMotor.setText(namaMotor);
 
+                    lat = Double.valueOf(sublat);
+                    lon = Double.valueOf(sublon);
+
                     Sping = ping;
                     Smesin = mesin;
                     Ssecure = secure;
-                    lat = latitude;
-                    lon = longitude;
                     SharedVariable.latitudeMotor = lat;
                     SharedVariable.longitudeMotor = lon;
 
-                    if (Sping.equals("off0")){
+
+                    if (Sping.equals("Off")){
                         img_search.setImageResource(R.drawable.search_off);
                     }else {
                         img_search.setImageResource(R.drawable.search_on);
                     }
 
-                    if (Smesin.equals("off0")){
+                    if (Smesin.equals("Off")){
                         img_engine.setImageResource(R.drawable.mesin_off);
                     }else {
                         img_engine.setImageResource(R.drawable.mesin_on);
                     }
 
-                    if (Ssecure.equals("off0")){
+                    if (Ssecure.equals("Off")){
                         img_timer.setImageResource(R.drawable.padlock);
                     }else {
                         img_timer.setImageResource(R.drawable.locked_padlock);
@@ -190,7 +194,7 @@ public class BerandaActivity extends BaseDrawerActivity implements LocationListe
                 }
             });
 
-            ref.child("device").child(activeDevice).child("lat").addValueEventListener(new ValueEventListener() {
+            ref.child("device").child(activeDevice).child("latlon").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                    sendRequest();
@@ -203,61 +207,52 @@ public class BerandaActivity extends BaseDrawerActivity implements LocationListe
             });
         }
 
+        //menyalakan motor
         crd_mesin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                if (Smesin.equals("off0")){
-                    ref.child("device").child(activeDevice).child("mesin").setValue("on1");
+                if (Smesin.equals("Off")){
+                    ref.child("device").child(activeDevice).child("mesin").setValue("On");
                   //  Toast.makeText(getApplicationContext(),"Hour : "+a+", B : "+b, Toast.LENGTH_SHORT).show();
 
 
                 }else {
-                    ref.child("device").child(activeDevice).child("mesin").setValue("off0");
+                    ref.child("device").child(activeDevice).child("mesin").setValue("Off");
                 }
 
             }
         });
 
+        //// MEnghidupkan fitur cari Motor (klakson nyala)
         crd_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                if (Sping.equals("off0")){
-                    ref.child("device").child(activeDevice).child("ping").setValue("on1");
+                if (Sping.equals("Off")){
+                    ref.child("device").child(activeDevice).child("ping").setValue("On");
+                }else {
+                    ref.child("device").child(activeDevice).child("ping").setValue("Off");
                 }
-
-                mCountDownTimer = new CountDownTimer(time * 1000, 50) {
-                    @Override
-                    public void onTick(long millisUnitFinished) {
-                        mTimeRemaining = ((millisUnitFinished / 1000) + 1);
-
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        ref.child("device").child(activeDevice).child("ping").setValue("off0");
-                    }
-                };
-                mCountDownTimer.start();
-
 
             }
         });
 
+        //menyalakan fitur secure mode
         crd_timer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                if (Ssecure.equals("off0")){
-                    ref.child("device").child(activeDevice).child("secureMode").setValue("on1");
+                if (Ssecure.equals("Off")){
+                    ref.child("device").child(activeDevice).child("secureMode").setValue("On");
                     SharedVariable.notifChance = 0;
                 }else {
-                    ref.child("device").child(activeDevice).child("secureMode").setValue("off0");
+                    ref.child("device").child(activeDevice).child("secureMode").setValue("Off");
                 }
             }
         });
 
+        //Pindah Ke Maps Activity
         crd_lokasi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -426,7 +421,7 @@ public class BerandaActivity extends BaseDrawerActivity implements LocationListe
 
        // if (SharedVariable.notifChance %3 == 0) {
 
-        if (Ssecure.equals("on1")) {
+        if (Ssecure.equals("On")) {
             if (jrkMotor > 2000) {
                 Toast.makeText(getApplicationContext(), "Motor tidak berada dalam jarak aman, segera periksa Motor anda. Jarak = : " + jarakMotor, Toast.LENGTH_SHORT).show();
 
