@@ -57,6 +57,10 @@
             android:name=".AlarmReceiver"
             android:process=":remote" />
 
+        <receiver
+            android:name=".WarningReceiver"
+            android:process=":remote" />
+
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"></activity>

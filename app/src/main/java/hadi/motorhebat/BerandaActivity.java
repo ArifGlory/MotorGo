@@ -54,7 +54,7 @@ public class BerandaActivity extends BaseDrawerActivity implements LocationListe
     TextView txtNamaMotor,txtPlatNomor;
     CardView crd_mesin,crd_timer,crd_search,crd_lokasi;
     ImageView img_engine,img_search,img_lokasi,img_timer;
-    String Smesin,Ssecure,Slokasi,Sping,Snama,Splat;
+    String Smesin,Ssecure,Slokasi,Sping,Snama,Splat,Swarning;
     private static final long time = 2;
     private CountDownTimer mCountDownTimer;
     private long mTimeRemaining;
@@ -149,6 +149,7 @@ public class BerandaActivity extends BaseDrawerActivity implements LocationListe
                     String secure = dataSnapshot.child("secureMode").getValue().toString();
                     String latlon = dataSnapshot.child("latlon").getValue().toString();
                     String sublon = latlon.substring(latlon.indexOf(",")+1);
+                    String warning = dataSnapshot.child("warning").getValue().toString();
                     int index = latlon.indexOf(",");
                     String sublat = latlon.substring(0,index);
                     //Toast.makeText(getApplicationContext(),"substing lat : "+sublat+" | substing lon : "+sublon, Toast.LENGTH_SHORT).show();
@@ -162,6 +163,7 @@ public class BerandaActivity extends BaseDrawerActivity implements LocationListe
                     Sping = ping;
                     Smesin = mesin;
                     Ssecure = secure;
+                    Swarning = warning;
                     SharedVariable.latitudeMotor = lat;
                     SharedVariable.longitudeMotor = lon;
 
@@ -182,6 +184,36 @@ public class BerandaActivity extends BaseDrawerActivity implements LocationListe
                         img_timer.setImageResource(R.drawable.padlock);
                     }else {
                         img_timer.setImageResource(R.drawable.locked_padlock);
+                    }
+
+                    if (Swarning.equals("aman")){
+
+                    }else {
+                       //tampilkam Motif
+                        calNow = Calendar.getInstance().getTime();
+                        calSet = Calendar.getInstance();
+                        calBanding = Calendar.getInstance();
+                        a = calNow.getHours();
+                        b = calNow.getMinutes() + 1;
+                        calSet.set(Calendar.HOUR_OF_DAY, a);
+                        calSet.set(Calendar.MINUTE, b);
+                        calSet.set(Calendar.SECOND, 0);
+                        calSet.set(Calendar.MILLISECOND, 0);
+
+                        if (calSet.compareTo(calBanding) <= 0) {
+                            //today set time passed,count to tomorow
+
+                            calSet.add(Calendar.DATE, 1);
+                            Log.i("Hasil = ", "<=0");
+                        } else if (calSet.compareTo(calBanding) > 0) {
+
+                            Log.i("Hasil = ", " > 0");
+                        } else {
+
+                            Log.i("Hasil = ", "else");
+                        }
+
+                        setNotif(calSet);
                     }
 
                  //   Toast.makeText(getApplicationContext(),"lat : "+lat+" , Lon : "+lon , Toast.LENGTH_LONG).show();
@@ -505,7 +537,28 @@ public class BerandaActivity extends BaseDrawerActivity implements LocationListe
         }else {
             alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,targetCal.getTimeInMillis(),pendingIntent);
         }
-
-
     }
+
+    private void setNotif(Calendar targetCal){
+
+        Intent i = new Intent(getBaseContext(), WarningReceiver.class);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(),RQS1,i,0);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        //alarmManager.set(AlarmManager.RTC_WAKEUP,targetCal.getTimeInMillis(),pendingIntent);
+
+        if (Build.VERSION.SDK_INT < 23){
+
+            if (Build.VERSION.SDK_INT >= 19){
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP,targetCal.getTimeInMillis(),pendingIntent);
+            }else {
+                alarmManager.set(AlarmManager.RTC_WAKEUP,targetCal.getTimeInMillis(),pendingIntent);
+            }
+
+        }else {
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,targetCal.getTimeInMillis(),pendingIntent);
+        }
+    }
+
+
 }
